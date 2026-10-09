@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Text Marker</title>
+  <style>
+    body { font: 14px sans-serif; max-width: 720px; margin: 20px auto; padding: 0 16px; }
+    textarea { width: 100%; height: 360px; font: 13px monospace; box-sizing: border-box; }
+    button, select { margin: 8px 8px 0 0; padding: 4px 10px; }
+    #status { margin-top: 8px; color: #060; }
+    code { background: #eee; padding: 1px 4px; }
+  </style>
+</head>
+<body>
+  <h2>Text Marker</h2>
+  <p><label><input type="checkbox" id="whole"> Only mark whole words (no match if letters or digits directly precede or follow)</label></p>
+  <h3>Import / Export</h3>
+  <p>One entry per line: <code>keyword | color</code>. The color is a name (<span id="names"></span>) or a hex value like <code>#ffcc00</code>. Lines without a color use the default below.</p>
+  <textarea id="text" spellcheck="false"></textarea><br>
+  <label>Default color: <select id="def"></select></label>
+  <button id="import">Import (add / overwrite)</button>
+  <button id="replace">Replace all</button>
+  <button id="export">Load current list</button>
+  <button id="download">Download .txt</button>
+  <div id="status"></div>
+  <script src="colors.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

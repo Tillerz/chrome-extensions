@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Text Marker",
+  "version": "1.0",
+  "description": "Mark selected text with pastel colors; marks are remembered and highlighted on every page.",
+  "permissions": ["contextMenus", "storage"],
+  "background": { "service_worker": "background.js" },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "action": { "default_title": "Text Marker (click to toggle)" },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}
