@@ -8,12 +8,39 @@
     textarea { width: 100%; height: 360px; font: 13px monospace; box-sizing: border-box; }
     button, select { margin: 8px 8px 0 0; padding: 4px 10px; }
     #status { margin-top: 8px; color: #060; }
+    #typo td { padding: 4px 12px 4px 0; }
+    #typo select { min-width: 220px; }
+    #preview { border: 1px solid #ccc; border-radius: 4px; padding: 12px; margin-top: 8px; }
     code { background: #eee; padding: 1px 4px; }
   </style>
 </head>
 <body>
   <h2>Text Marker</h2>
   <p><label><input type="checkbox" id="whole"> Only mark whole words (no match if letters or digits directly precede or follow)</label></p>
+  <h3>Text appearance</h3>
+  <p><label><input type="checkbox" id="typoOn"> Apply these settings to body text on all pages (paragraphs, lists, quotes, preformatted/text files; not headings or tables)</label></p>
+  <table id="typo">
+    <tr><td>Font</td><td><select id="font"></select></td></tr>
+    <tr><td>Font size</td><td><select id="size"></select></td></tr>
+    <tr><td>Line height</td>
+      <td><input type="range" id="lh" min="1" max="2.5" step="0.05"> <output id="lhOut"></output>
+      <label><input type="checkbox" id="lhDef"> page default</label></td></tr>
+    <tr><td>Character spacing</td>
+      <td><input type="range" id="ls" min="-1" max="5" step="0.1"> <output id="lsOut"></output>
+      <label><input type="checkbox" id="lsDef"> page default</label></td></tr>
+    <tr><td>Word spacing</td>
+      <td><input type="range" id="ws" min="-2" max="10" step="0.5"> <output id="wsOut"></output>
+      <label><input type="checkbox" id="wsDef"> page default</label></td></tr>
+    <tr><td>Background color</td>
+      <td><input type="color" id="bg" value="#ffffff">
+      <label><input type="checkbox" id="bgDef"> page default</label></td></tr>
+    <tr><td>Text color</td>
+      <td><input type="color" id="fg" value="#222222">
+      <label><input type="checkbox" id="fgDef"> page default</label></td></tr>
+    <tr><td>Columns</td>
+      <td><input type="range" id="cols" min="1" max="4" step="1"> <output id="colsOut"></output></td></tr>
+  </table>
+  <div id="preview">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</div>
   <h3>Import / Export</h3>
   <p>One entry per line: <code>keyword | color</code>. The color is a name (<span id="names"></span>) or a hex value like <code>#ffcc00</code>. Lines without a color use the default below.</p>
   <textarea id="text" spellcheck="false"></textarea><br>

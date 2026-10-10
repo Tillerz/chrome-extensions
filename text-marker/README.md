@@ -11,6 +11,7 @@ A Chrome extension (Manifest V3) that highlights your saved keywords on every pa
 - Hover a highlight to see how many times that word appears on the page.
 - Highlight text is always dark, so it stays readable on dark-mode pages.
 - Import / export of your keyword list.
+- Adjustable body text appearance on all pages: font, size, line height, character and word spacing, and 1 to 4 columns.
 - Toolbar button to turn the extension on and off.
 
 ## Installation
@@ -48,6 +49,13 @@ Hover over a highlighted word to see a tooltip such as `"example": 5 on this pag
 Right-click the toolbar icon and choose **Options**.
 
 - **Only mark whole words**: a keyword only matches if no letter, digit or underscore directly precedes or follows it. Off by default.
+- **Text appearance**: font, font size, line height, character spacing and word spacing for body text on all pages, with a live preview. Settings are saved as you change them and apply to all open tabs immediately.
+  - Affected elements: paragraphs, list items, block quotes, definition lists, figure captions and `<pre>` (so plain text and `.txt`/`.md` files are covered). Headings and tables are left alone.
+  - The font list comes from your installed fonts.
+  - The "Apply these settings" box must be ticked. "Page default" leaves a value untouched.
+  - **Background color** and **text color**: set on the page and on the body text elements above. Highlights keep their own colors and dark text, so marked words stay visible on any background.
+  - **Columns** (1 to 4) splits the whole page into columns, not just the elements above. For text documents the columns are applied to the text itself; for normal pages to the `<body>`. At 1 nothing is changed.
+  - For local files, enable "Allow access to file URLs" in the extension's details on `chrome://extensions`.
 - **Import / Export**: edit your list in bulk (see below).
 
 ## Import / export format
@@ -95,6 +103,9 @@ Settings and marks are stored locally in `chrome.storage.local` (keys `marks`, `
 - Text split across several HTML elements (for example a phrase that is partly bold) is not matched.
 - Whole-word checks only see the text inside a single element.
 - Text in input fields and editable areas is not highlighted.
+- Text appearance settings don't reach body text that sits in plain `<div>`/`<span>` elements without a `<p>`, which is common on web apps.
+- Columns can break pages with fixed headers, sidebars or full-screen layouts. Set Columns back to 1 if a page looks wrong.
+- After updating the extension, reload it on `chrome://extensions` and reload open tabs, or old tabs keep running the previous version.
 
 ## License
 

@@ -125,18 +125,59 @@
     if (tip && e.target.closest && e.target.closest("mark.tm-mark")) tip.style.display = "none";
   });
 
+  const isHex = (c) => typeof c === "string" && /^#[0-9a-f]{6}$/i.test(c);
+
+  // Typography override: base text only (paragraphs, list items, quotes), never headings or tables.
+  function applyTypo(t) {
+    let style = document.getElementById("tm-typo");
+    const rules = [];
+    if (t && t.on) {
+      if (t.font) rules.push(`font-family:"${t.font.replace(/"/g, "")}",sans-serif`);
+      if (t.size) rules.push(`font-size:${t.size}px`);
+      if (t.lh != null) rules.push(`line-height:${t.lh}`);
+      if (t.ls != null) rules.push(`letter-spacing:${t.ls}px`);
+      if (t.ws != null) rules.push(`word-spacing:${t.ws}px`);
+      // Colors go on the page and text elements only. Highlights (<mark>) set their own
+      // background and text color inline, so they always win and never vanish.
+      if (isHex(t.fg)) rules.push(`color:${t.fg}`);
+      if (isHex(t.bg)) rules.push(`background-color:${t.bg}`);
+    }
+    const pageBg = t && t.on && isHex(t.bg) ? t.bg : null;
+    const cols = t && t.on && t.cols > 1 ? t.cols : 0;
+    if (!rules.length && !cols && !pageBg) { if (style) style.remove(); return; }
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "tm-typo";
+      document.documentElement.append(style);
+    }
+    style.textContent =
+      (pageBg ? `html, body {background-color:${pageBg} !important;}` : "") +
+      (rules.length
+        ? ":is(p, li, blockquote, dd, dt, figcaption, pre):not(table *) {" +
+          rules.map((r) => r + " !important").join(";") + "}"
+        : "") +
+      // Text documents (.txt/.md) are a lone <pre> in <body>; put the columns on the <pre> there.
+      (cols
+        ? `${/^text\/(?!html)/.test(document.contentType) ? "body > pre" : "body"}` +
+          `{column-count:${cols} !important;column-gap:2em !important;width:auto !important;max-width:none !important;}`
+        : "");
+  }
+
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
+    if (changes.typo) applyTypo(changes.typo.newValue);
+    if (!(changes.marks || changes.enabled || changes.wholeWords)) return;
     if (changes.marks) marks = changes.marks.newValue || {};
     if (changes.enabled) enabled = changes.enabled.newValue !== false;
     if (changes.wholeWords) wholeWords = !!changes.wholeWords.newValue;
     apply();
   });
 
-  chrome.storage.local.get(["marks", "enabled", "wholeWords"], (data) => {
+  chrome.storage.local.get(["marks", "enabled", "wholeWords", "typo"], (data) => {
     marks = data.marks || {};
     enabled = data.enabled !== false;
     wholeWords = !!data.wholeWords;
+    applyTypo(data.typo);
     apply();
   });
 })();

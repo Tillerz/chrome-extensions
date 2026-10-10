@@ -3,7 +3,7 @@
   "name": "Text Marker",
   "version": "1.0",
   "description": "Mark selected text with pastel colors; marks are remembered and highlighted on every page.",
-  "permissions": ["contextMenus", "storage"],
+  "permissions": ["contextMenus", "storage", "fontSettings"],
   "background": { "service_worker": "background.js" },
   "options_ui": { "page": "options.html", "open_in_tab": true },
   "action": { "default_title": "Text Marker (click to toggle)" },
