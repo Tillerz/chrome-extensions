@@ -76,6 +76,12 @@ const SIZES = [10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 22, 24, 28, 32];
 $("size").add(new Option("Page default", ""));
 for (const s of SIZES) $("size").add(new Option(s + " px", s));
 
+// Sample highlights in the preview, styled exactly like the real ones (see content.js)
+document.querySelectorAll("#preview mark.pv").forEach((m) => {
+  const c = COLORS[Number(m.dataset.c) % COLORS.length];
+  m.style.cssText = `background:color-mix(in srgb, ${c.hex} 70%, transparent);color:#1a1a1a;padding:0;border-radius:2px;`;
+});
+
 function updatePreview() {
   const p = $("preview").style;
   p.fontFamily = $("font").value ? `"${$("font").value}", sans-serif` : "";

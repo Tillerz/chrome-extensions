@@ -11,7 +11,12 @@ A Chrome extension (Manifest V3) that highlights your saved keywords on every pa
 - Hover a highlight to see how many times that word appears on the page.
 - Highlight text is always dark, so it stays readable on dark-mode pages.
 - Import / export of your keyword list.
-- Adjustable body text appearance on all pages: font, size, line height, character and word spacing, and 1 to 4 columns.
+- Adjustable body text appearance on all pages, with a live preview:
+  - Font (from your installed fonts) and font size.
+  - Line height, character spacing and word spacing.
+  - Background color and text color (highlights stay visible on any background).
+  - 1 to 4 columns for the whole page.
+  - Works on web pages and on plain text / `.md` files.
 - Toolbar button to turn the extension on and off.
 
 ## Installation
@@ -47,6 +52,8 @@ Hover over a highlighted word to see a tooltip such as `"example": 5 on this pag
 ### Options page
 
 Right-click the toolbar icon and choose **Options**.
+
+![Text Marker settings page](resources/settings.png)
 
 - **Only mark whole words**: a keyword only matches if no letter, digit or underscore directly precedes or follows it. Off by default.
 - **Text appearance**: font, font size, line height, character spacing and word spacing for body text on all pages, with a live preview. Settings are saved as you change them and apply to all open tabs immediately.
