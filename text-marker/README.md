@@ -1,4 +1,4 @@
-# Text Marker
+# Tillerz Text Tool (3T)
 
 A Chrome extension (Manifest V3) that highlights your saved keywords on every page you visit. Select text, right-click, pick a color, and that text is highlighted everywhere from then on.
 

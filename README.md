@@ -6,9 +6,9 @@ A collection of small Chrome extensions.
 
 | Extension | Description |
 | --- | --- |
-| [Text Marker](text-marker/) | Highlights your saved keywords in pastel colors on every page, and lets you restyle body text (font, spacing, colors, columns). |
+| [Tillerz Text Tool (3T)](tillerz-text-tool/) | Highlights your saved keywords in pastel colors on every page, and lets you restyle body text (font, spacing, colors, columns). |
 
-![Text Marker settings page](text-marker/resources/settings.png)
+![Text Marker settings page](tillerz-text-tool/resources/settings.png)
 
 ## Installing an extension
 

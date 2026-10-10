@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Text Marker",
+  "name": "Tillerz Text Tool (3T)",
   "version": "1.0",
-  "description": "Mark selected text with pastel colors; marks are remembered and highlighted on every page.",
+  "description": "Highlight saved keywords in pastel colors on every page. Improve readability: font, spacing, colors and columns.",
   "permissions": ["contextMenus", "storage", "fontSettings"],
   "background": { "service_worker": "background.js" },
   "options_ui": { "page": "options.html", "open_in_tab": true },
