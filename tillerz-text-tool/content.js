@@ -3,6 +3,7 @@
   let marks = {};
   let enabled = true;
   let wholeWords = false;
+  let markdown = false;
   let observer = null;
   let timer = null;
   let tip = null;
@@ -33,7 +34,7 @@
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(n) {
         const p = n.parentElement;
-        if (!p || SKIP.has(p.tagName) || p.isContentEditable || p.closest("mark.tm-mark")) {
+        if (!p || SKIP.has(p.tagName) || p.isContentEditable || p.closest("mark.tm-mark, .tm-md-src")) {
           return NodeFilter.FILTER_REJECT;
         }
         return n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
@@ -158,14 +159,57 @@
         : "") +
       // Text documents (.txt/.md) are a lone <pre> in <body>; put the columns on the <pre> there.
       (cols
-        ? `${/^text\/(?!html)/.test(document.contentType) ? "body > pre" : "body"}` +
+        ? `${/^text\/(?!html)/.test(document.contentType) ? "body > pre, body > .tm-md-root" : "body"}` +
           `{column-count:${cols} !important;column-gap:2em !important;width:auto !important;max-width:none !important;}`
         : "");
+  }
+
+  // Markdown rendering: only for .md files (a lone <pre> in a text document).
+  // The original <pre> stays in the page, hidden, so switching the option off restores it.
+  const MD_CSS =
+    ".tm-md-src{display:none !important}" +
+    ".tm-md-root{max-width:52em;margin:1.5em auto;padding:0 1em;font:16px/1.6 system-ui,sans-serif}" +
+    ".tm-md-root pre.tm-code,.tm-md-root code{background:rgba(127,127,127,.18);border-radius:3px}" +
+    ".tm-md-root code{padding:.1em .3em;font-family:Consolas,monospace}" +
+    ".tm-md-root pre.tm-code{padding:.8em 1em;overflow:auto;white-space:pre}" +
+    ".tm-md-root pre.tm-code code{padding:0;background:none}" +
+    ".tm-md-root blockquote{margin:1em 0;padding:0 1em;border-left:4px solid rgba(127,127,127,.5)}" +
+    ".tm-md-root table{border-collapse:collapse;margin:1em 0}" +
+    ".tm-md-root th,.tm-md-root td{border:1px solid rgba(127,127,127,.5);padding:.3em .7em}" +
+    ".tm-md-root hr{border:0;border-top:1px solid rgba(127,127,127,.5)}" +
+    ".tm-md-root img{max-width:100%}";
+
+  function applyMarkdown() {
+    const pre = document.body && document.body.querySelector(":scope > pre");
+    const isMd = document.contentType === "text/markdown" ||
+      (/^text\/plain/.test(document.contentType) && /\.(md|markdown|mdown)$/i.test(location.pathname));
+    if (!pre || !isMd) return;
+    document.querySelectorAll("body > .tm-md-root").forEach((el) => el.remove());
+    if (!markdown) { pre.classList.remove("tm-md-src"); return; }
+    if (!document.getElementById("tm-md-style")) {
+      const style = document.createElement("style");
+      style.id = "tm-md-style";
+      style.textContent = MD_CSS;
+      document.documentElement.append(style);
+    }
+    const root = document.createElement("div");
+    root.className = "tm-md-root";
+    const tpl = document.createElement("template");
+    tpl.innerHTML = tmRenderMarkdown(pre.textContent);
+    root.append(tpl.content);
+    pre.classList.add("tm-md-src");
+    pre.after(root);
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
     if (changes.typo) applyTypo(changes.typo.newValue);
+    if (changes.markdown) {
+      markdown = !!changes.markdown.newValue;
+      stopObserving();
+      applyMarkdown();
+      apply();
+    }
     if (!(changes.marks || changes.enabled || changes.wholeWords)) return;
     if (changes.marks) marks = changes.marks.newValue || {};
     if (changes.enabled) enabled = changes.enabled.newValue !== false;
@@ -173,11 +217,13 @@
     apply();
   });
 
-  chrome.storage.local.get(["marks", "enabled", "wholeWords", "typo"], (data) => {
+  chrome.storage.local.get(["marks", "enabled", "wholeWords", "typo", "markdown"], (data) => {
     marks = data.marks || {};
     enabled = data.enabled !== false;
     wholeWords = !!data.wholeWords;
+    markdown = !!data.markdown;
     applyTypo(data.typo);
+    applyMarkdown();
     apply();
   });
 })();

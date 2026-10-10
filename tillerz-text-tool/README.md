@@ -17,6 +17,7 @@ A Chrome extension (Manifest V3) that highlights your saved keywords on every pa
   - Background color and text color (highlights stay visible on any background).
   - 1 to 4 columns for the whole page.
   - Works on web pages and on plain text / `.md` files.
+- Optional **Markdown rendering** for `.md` files, with a built-in parser (no external libraries).
 - Toolbar button to turn the extension on and off.
 
 ## Installation
@@ -71,6 +72,7 @@ Right-click the toolbar icon and choose **Options**.
 ![Text Marker settings page](resources/settings.png)
 
 - **Only mark whole words**: a keyword only matches if no letter, digit or underscore directly precedes or follows it. Off by default.
+- **Render Markdown in .md files**: shows `.md` files as formatted text instead of raw source. Off by default; the original text is kept, so switching it off restores it. Supported: headings, paragraphs, bold, italic, strikethrough, inline code, code blocks, block quotes, nested and task lists, tables, horizontal rules, links, images and line breaks. Raw HTML in the file is shown as text, and only `http`, `https` and `mailto` links are active. This works for local files and web-hosted `.md` files that Chrome shows as text. The text appearance settings below apply to the rendered text too.
 - **Text appearance**: font, font size, line height, character spacing and word spacing for body text on all pages, with a live preview. Settings are saved as you change them and apply to all open tabs immediately.
   - Affected elements: paragraphs, list items, block quotes, definition lists, figure captions and `<pre>` (so plain text and `.txt`/`.md` files are covered). Headings and tables are left alone.
   - The font list comes from your installed fonts.
@@ -127,6 +129,7 @@ Settings and marks are stored locally in `chrome.storage.local` (keys `marks`, `
 - Text in input fields and editable areas is not highlighted.
 - Text appearance settings don't reach body text that sits in plain `<div>`/`<span>` elements without a `<p>`, which is common on web apps.
 - Columns can break pages with fixed headers, sidebars or full-screen layouts. Set Columns back to 1 if a page looks wrong.
+- The Markdown parser is small and covers the common syntax only. It has no footnotes, reference-style links, HTML blocks or front matter handling.
 - After updating the extension, reload it on `chrome://extensions` and reload open tabs, or old tabs keep running the previous version.
 
 ## License
@@ -140,5 +143,6 @@ CC BY-NC 4.0, see the [LICENSE](../LICENSE) in the repository root.
 | `manifest.json` | Extension manifest |
 | `background.js` | Context menu, toolbar toggle, saving marks |
 | `content.js` | Highlighting, hover tooltip, live updates |
+| `markdown.js` | Built-in Markdown renderer |
 | `colors.js` | Color definitions |
 | `options.html` / `options.js` | Options page with import/export |

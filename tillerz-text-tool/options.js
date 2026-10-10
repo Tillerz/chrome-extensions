@@ -68,6 +68,8 @@ $("download").onclick = async () => {
   a.click();
 };
 
+chrome.storage.local.get("markdown", (d) => { $("md").checked = !!d.markdown; });
+$("md").onchange = () => chrome.storage.local.set({ markdown: $("md").checked });
 chrome.storage.local.get("wholeWords", (d) => { $("whole").checked = !!d.wholeWords; });
 $("whole").onchange = () => chrome.storage.local.set({ wholeWords: $("whole").checked });
 
