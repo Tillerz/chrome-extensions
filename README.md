@@ -14,7 +14,7 @@ A collection of small Chrome extensions.
 
 1. Open `chrome://extensions` in Chrome.
 2. Enable **Developer mode**.
-3. Click **Load unpacked** and select the extension's folder (for example `text-marker`).
+3. Click **Load unpacked** and select the extension's folder (for example `tillerz-text-tool`).
 
 Each extension's folder has its own README with usage details.
 

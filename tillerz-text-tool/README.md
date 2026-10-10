@@ -1,6 +1,6 @@
 # Tillerz Text Tool (3T)
 
-A Chrome extension (Manifest V3) that highlights your saved keywords on every page you visit. Select text, right-click, pick a color, and that text is highlighted everywhere from then on.
+A Chrome extension (Manifest V3) that highlights your saved keywords on every page you visit, and makes text easier to read. Select text, right-click, pick a color, and that text is highlighted everywhere from then on. In the settings you can also change the font, size, spacing, colors and number of columns of body text on all pages.
 
 ## Features
 
@@ -21,13 +21,28 @@ A Chrome extension (Manifest V3) that highlights your saved keywords on every pa
 
 ## Installation
 
+### Option 1: Load unpacked (recommended)
+
 1. Download or clone this repository.
 2. Open `chrome://extensions` in Chrome.
 3. Enable **Developer mode** (top right).
-4. Click **Load unpacked** and select the `text-marker` folder.
+4. Click **Load unpacked** and select the `tillerz-text-tool` folder.
 5. Reload any tabs that were already open.
 
 After changing any file, click the reload icon on the extension's card in `chrome://extensions`.
+
+### Option 2: Install the .crx file
+
+Packaged releases are in [releases/](releases/), for example `tillerz-text-tool-v1.0.crx`.
+
+1. Download the `.crx` file.
+2. Open `chrome://extensions` and enable **Developer mode**.
+3. Drag the `.crx` file onto the extensions page and confirm the installation.
+4. Reload any tabs that were already open.
+
+Chrome on Windows often refuses `.crx` files that don't come from the Chrome Web Store and shows an error such as `CRX_REQUIRED_PROOF_MISSING` or "Package is invalid". If that happens, use Option 1. Extensions installed from a `.crx` also don't update automatically; install the newer file to update.
+
+To use the same extension ID as the packaged build, keep the signing key (`.pem`) that was created when the `.crx` was packed, and reuse it for later releases.
 
 ## Usage
 
