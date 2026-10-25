@@ -4,6 +4,8 @@
   let enabled = true;
   let wholeWords = false;
   let markdown = false;
+  let ruler = true;
+  let rulerEl = null, thumbEl = null, rulerTimer = null;
   let observer = null;
   let timer = null;
   let tip = null;
@@ -74,7 +76,73 @@
     unwrapAll();
     if (enabled) highlight(document.body);
     startObserving();
+    updateRuler();
   }
+
+  // Overview strip at the right edge (like the VS Code scrollbar markers): one tick per
+  // marked word at its relative position in the document; click a tick to jump there.
+  function removeRuler() {
+    if (rulerEl) rulerEl.remove();
+    rulerEl = thumbEl = null;
+  }
+
+  function updateThumb() {
+    if (!thumbEl) return;
+    const h = Math.max(document.documentElement.scrollHeight, 1);
+    thumbEl.style.top = (scrollY / h) * innerHeight + "px";
+    thumbEl.style.height = Math.max((innerHeight / h) * innerHeight, 6) + "px";
+  }
+
+  function updateRuler() {
+    if (window !== window.top) return;
+    const els = enabled && ruler ? [...document.querySelectorAll("mark.tm-mark")] : [];
+    if (!els.length) { removeRuler(); return; }
+
+    // read all positions first, then write, to avoid layout thrashing
+    const docH = Math.max(document.documentElement.scrollHeight, 1);
+    const ticks = [], seen = new Set();
+    for (const el of els) {
+      if (!el.getClientRects().length) continue;
+      const y = el.getBoundingClientRect().top + scrollY;
+      const top = Math.min(Math.round((y / docH) * innerHeight), innerHeight - 3);
+      const color = marks[el.dataset.tm];
+      if (!color || seen.has(top + color)) continue;
+      seen.add(top + color);
+      ticks.push({ el, top, color });
+    }
+
+    if (!rulerEl) {
+      rulerEl = document.createElement("div");
+      rulerEl.style.cssText =
+        "position:fixed;top:0;right:0;width:12px;height:100vh;z-index:2147483646;" +
+        "background:rgba(127,127,127,.12);pointer-events:none;";
+      rulerEl.addEventListener("click", (e) => {
+        if (e.target._el) e.target._el.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
+      document.documentElement.append(rulerEl);
+    }
+    const frag = document.createDocumentFragment();
+    thumbEl = document.createElement("div");
+    thumbEl.style.cssText =
+      "position:absolute;left:0;right:0;background:rgba(127,127,127,.3);pointer-events:none;";
+    frag.append(thumbEl);
+    for (const t of ticks) {
+      const d = document.createElement("div");
+      d.style.cssText =
+        `position:absolute;left:1px;right:1px;top:${t.top}px;height:3px;background:${t.color};` +
+        "box-shadow:0 0 0 1px rgba(0,0,0,.35);cursor:pointer;pointer-events:auto;";
+      d.title = t.el.dataset.tm;
+      d._el = t.el;
+      frag.append(d);
+    }
+    rulerEl.replaceChildren(frag);
+    updateThumb();
+  }
+
+  const scheduleRuler = () => { clearTimeout(rulerTimer); rulerTimer = setTimeout(updateRuler, 200); };
+  addEventListener("resize", scheduleRuler);
+  addEventListener("scroll", () => requestAnimationFrame(updateThumb), { passive: true });
+  new ResizeObserver(scheduleRuler).observe(document.documentElement);
 
   function startObserving() {
     if (!enabled || !document.body) return;
@@ -210,6 +278,10 @@
       applyMarkdown();
       apply();
     }
+    if (changes.ruler) {
+      ruler = changes.ruler.newValue !== false;
+      updateRuler();
+    }
     if (!(changes.marks || changes.enabled || changes.wholeWords)) return;
     if (changes.marks) marks = changes.marks.newValue || {};
     if (changes.enabled) enabled = changes.enabled.newValue !== false;
@@ -217,8 +289,9 @@
     apply();
   });
 
-  chrome.storage.local.get(["marks", "enabled", "wholeWords", "typo", "markdown"], (data) => {
+  chrome.storage.local.get(["marks", "enabled", "wholeWords", "typo", "markdown", "ruler"], (data) => {
     marks = data.marks || {};
+    ruler = data.ruler !== false;
     enabled = data.enabled !== false;
     wholeWords = !!data.wholeWords;
     markdown = !!data.markdown;

@@ -2,6 +2,13 @@
 
 A Chrome extension (Manifest V3) that highlights your saved keywords on every page you visit, and makes text easier to read. Select text, right-click, pick a color, and that text is highlighted everywhere from then on. In the settings you can also change the font, size, spacing, colors and number of columns of body text on all pages.
 
+## History
+
+Version 1.1
+- Overview Strip on the right added
+Version 1.0
+- initial release
+
 ## Features
 
 - Right-click selected text to **mark** it in one of several pastel colors, or **unmark** it.
@@ -18,6 +25,7 @@ A Chrome extension (Manifest V3) that highlights your saved keywords on every pa
   - 1 to 4 columns for the whole page.
   - Works on web pages and on plain text / `.md` files.
 - Optional **Markdown rendering** for `.md` files, with a built-in parser (no external libraries).
+- **Overview strip** at the right edge of the page showing where marked words are, in their colors, with the visible part of the page indicated. Click a tick to jump to that word.
 - Toolbar button to turn the extension on and off.
 
 ## Installation
@@ -72,6 +80,7 @@ Right-click the toolbar icon and choose **Options**.
 ![Text Marker settings page](resources/settings.png)
 
 - **Only mark whole words**: a keyword only matches if no letter, digit or underscore directly precedes or follows it. Off by default.
+- **Overview strip**: a narrow strip next to the scrollbar with one tick per marked word, placed by its position in the page and drawn in the word's color. Hover a tick to see the word, click it to scroll there. A grey box shows the part of the page you are looking at. On by default; only shown on the top-level page, not inside iframes.
 - **Render Markdown in .md files**: shows `.md` files as formatted text instead of raw source. Off by default; the original text is kept, so switching it off restores it. Supported: headings, paragraphs, bold, italic, strikethrough, inline code, code blocks, block quotes, nested and task lists, tables, horizontal rules, links, images and line breaks. Raw HTML in the file is shown as text, and only `http`, `https` and `mailto` links are active. This works for local files and web-hosted `.md` files that Chrome shows as text. The text appearance settings below apply to the rendered text too.
 - **Text appearance**: font, font size, line height, character spacing and word spacing for body text on all pages, with a live preview. Settings are saved as you change them and apply to all open tabs immediately.
   - Affected elements: paragraphs, list items, block quotes, definition lists, figure captions and `<pre>` (so plain text and `.txt`/`.md` files are covered). Headings and tables are left alone.
@@ -130,6 +139,7 @@ Settings and marks are stored locally in `chrome.storage.local` (keys `marks`, `
 - Text appearance settings don't reach body text that sits in plain `<div>`/`<span>` elements without a `<p>`, which is common on web apps.
 - Columns can break pages with fixed headers, sidebars or full-screen layouts. Set Columns back to 1 if a page looks wrong.
 - The Markdown parser is small and covers the common syntax only. It has no footnotes, reference-style links, HTML blocks or front matter handling.
+- The overview strip assumes a normal top-to-bottom page. With multiple columns, or on pages that scroll inside an element instead of the window, the tick positions are only approximate.
 - After updating the extension, reload it on `chrome://extensions` and reload open tabs, or old tabs keep running the previous version.
 
 ## License

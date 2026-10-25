@@ -70,6 +70,8 @@ $("download").onclick = async () => {
 
 chrome.storage.local.get("markdown", (d) => { $("md").checked = !!d.markdown; });
 $("md").onchange = () => chrome.storage.local.set({ markdown: $("md").checked });
+chrome.storage.local.get("ruler", (d) => { $("ruler").checked = d.ruler !== false; });
+$("ruler").onchange = () => chrome.storage.local.set({ ruler: $("ruler").checked });
 chrome.storage.local.get("wholeWords", (d) => { $("whole").checked = !!d.wholeWords; });
 $("whole").onchange = () => chrome.storage.local.set({ wholeWords: $("whole").checked });
 
